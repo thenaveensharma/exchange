@@ -92,14 +92,16 @@ func (ex *Exchange) handlePlaceOrder(c echo.Context) error {
 }
 
 type Order struct {
-	Price     float64
-	Size      float64
-	Bid       bool
-	Timestamp int64
+	Price     float64 `json:"price"`
+	Size      float64 `json:"size"`
+	Bid       bool    `json:"bid"`
+	Timestamp int64   `json:"timestamp"`
 }
 type OrderbookData struct {
-	Asks []*Order
-	Bids []*Order
+	TotalAskVolume float64  `json:"totolAskVolume"`
+	TotalBidVolume float64  `json:"totolBidVolume"`
+	Asks           []*Order `json:"asks"`
+	Bids           []*Order `json:"bids"`
 }
 
 func (ex *Exchange) handleGetBook(c echo.Context) error {
@@ -113,8 +115,10 @@ func (ex *Exchange) handleGetBook(c echo.Context) error {
 	}
 
 	orderbookData := OrderbookData{
-		Asks: []*Order{},
-		Bids: []*Order{},
+		TotalAskVolume: ob.AskTotalVolume(),
+		TotalBidVolume: ob.BidTotalVolume(),
+		Asks:           []*Order{},
+		Bids:           []*Order{},
 	}
 	for _, limit := range ob.Asks() {
 
